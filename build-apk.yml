@@ -23,8 +23,19 @@ jobs:
         with:
           cache: true
 
+      - name: Start build timing
+        run: echo "Start time: $(date)"  # Record start time
+
       - name: Build APK with Gradle
-        run: ./gradlew assembleRelease  # Build the release APK
+        run: |
+          start_time=$(date +%s)   # Capture start time in seconds
+          ./gradlew assembleRelease  # Build the release APK
+          end_time=$(date +%s)     # Capture end time in seconds
+          elapsed_time=$((end_time - start_time))  # Calculate elapsed time
+          echo "Build took $elapsed_time seconds"  # Display elapsed time
+
+      - name: End build timing
+        run: echo "End time: $(date)"  # Record end time
 
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v2
