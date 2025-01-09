@@ -26,9 +26,20 @@ jobs:
       with:
         cache: true   # This caches Gradle dependencies to speed up builds
 
+    - name: Start build timing
+      run: echo "Start time: $(date)"
+
     - name: Build APK with Gradle
-      run: ./gradlew assembleRelease   # For building the release version, or use assembleDebug for debug version
-    
+      run: |
+        start_time=$(date +%s)   # Capture start time in seconds
+        ./gradlew assembleRelease   # For building the release version, or use assembleDebug for debug version
+        end_time=$(date +%s)   # Capture end time in seconds
+        elapsed_time=$((end_time - start_time))   # Calculate elapsed time in seconds
+        echo "Build took $elapsed_time seconds"
+
+    - name: End build timing
+      run: echo "End time: $(date)"
+
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v2
       with:
